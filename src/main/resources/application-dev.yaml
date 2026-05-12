@@ -1,0 +1,23 @@
+cripto-provider:
+   ripio:
+      seguridad:
+         clienteId: 0Vnomi0NtUqKcvf0NSxQ4JHt6oZUUvKGCtrIVnc5
+         clienteSecreto: 48JBFg6DVhGDsENifMhokMupo7XgkO2oQDLf7CtNnDdYzySsyE0GsMO1ee1Oz1BvFMFBNHYBNU1pnGMepX8eDXMbE2OGa2EJMw6hwb83Ylihqqwlw1nACY49gEDW5v5q
+server:
+   port: 8081
+spring:
+   datasource:
+      username: diego.bueno
+      password: vRSZrzHO6S
+      url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=sisa-dbdev01)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=SISADEV)))
+#logging:
+#   level:
+#      org: 
+#         hibernate:
+#            SQL: TRACE
+#            type:
+#               descriptor:
+#                  sql:
+#                     BasicBinder: TRACE
+#         springframework: TRACE
+            
