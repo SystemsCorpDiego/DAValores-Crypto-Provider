@@ -2,13 +2,13 @@ package com.davalores.crypto.provider.app.ripio.service;
 
 import org.springframework.stereotype.Service;
 
-import com.davalores.crypto.provider.app.port.in.CotizacionObtenerPortIn;
+import com.davalores.crypto.provider.app.port.in.CotizarPortIn;
 import com.davalores.crypto.provider.app.ripio.port.out.CotizarRipioPortOut;
 import com.davalores.crypto.provider.domain.model.Cotizacion;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 
 @Service
-public class CotizarRipioService implements CotizacionObtenerPortIn {
+public class CotizarRipioService implements CotizarPortIn {
 
 	private LoginRipioService loginRipioService;
 	private CotizarRipioPortOut cotizacionObtener;	

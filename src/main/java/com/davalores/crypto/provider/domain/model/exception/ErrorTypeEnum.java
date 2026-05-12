@@ -3,8 +3,9 @@ package com.davalores.crypto.provider.domain.model.exception;
 public enum ErrorTypeEnum {
 	
 	RIPIO_LOGIN_ERROR("RIPIO_LOGIN_ERROR"),
-	RIPIO_COTI_ERROR("RIPIO_COTI_ERROR")
-
+	RIPIO_COTI_ERROR("RIPIO_COTI_ERROR"),
+	RIPIO_CLIENTE_CREAR_ERROR("RIPIO_CLIENTE_CREAR_ERROR")
+	
     ;
  
     private String type;
