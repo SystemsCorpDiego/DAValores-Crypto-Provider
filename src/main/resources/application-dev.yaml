@@ -1,8 +1,8 @@
 cripto-provider:
    ripio:
       seguridad:
-         clienteId: 0Vnomi0NtUqKcvf0NSxQ4JHt6oZUUvKGCtrIVnc5
-         clienteSecreto: 48JBFg6DVhGDsENifMhokMupo7XgkO2oQDLf7CtNnDdYzySsyE0GsMO1ee1Oz1BvFMFBNHYBNU1pnGMepX8eDXMbE2OGa2EJMw6hwb83Ylihqqwlw1nACY49gEDW5v5q
+         clienteId: ${CRYPTO_CLIENT_ID}
+         clienteSecreto: ${CRYPTO_CLIENT_SECRET}
 server:
    port: 8081
 spring:
