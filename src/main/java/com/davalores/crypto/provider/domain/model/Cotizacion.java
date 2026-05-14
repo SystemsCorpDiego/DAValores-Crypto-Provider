@@ -6,8 +6,9 @@ import java.time.LocalDateTime;
 
 public class Cotizacion {
 	
-	private String uuid;
-	private String uuidProveedor;
+	private String idExterno;
+	private String idExternoProveedor;
+	
 	private String activoBase;
 	private String activoCoti;
 	private BigDecimal compraRatio;
@@ -17,17 +18,17 @@ public class Cotizacion {
 	private LocalDateTime expira;
 	
 	
-	public String getUuid() {
-		return uuid;
+	public String getIdExterno() {
+		return idExterno;
 	}
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setIdExterno(String idExterno) {
+		this.idExterno = idExterno;
 	}
-	public String getUuidProveedor() {
-		return uuidProveedor;
+	public String getIdExternoProveedor() {
+		return idExternoProveedor;
 	}
-	public void setUuidProveedor(String uuidProveedor) {
-		this.uuidProveedor = uuidProveedor;
+	public void setIdExternoProveedor(String idExternoProveedor) {
+		this.idExternoProveedor = idExternoProveedor;
 	}
 	public String getActivoBase() {
 		return activoBase;

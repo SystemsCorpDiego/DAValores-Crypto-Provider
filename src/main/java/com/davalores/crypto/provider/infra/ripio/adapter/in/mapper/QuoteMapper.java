@@ -1,4 +1,4 @@
-package com.davalores.crypto.provider.infra.ripio.adapter.out;
+package com.davalores.crypto.provider.infra.ripio.adapter.in.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,8 +10,8 @@ import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteDt
 @Mapper(componentModel = "spring", uses = {DateISO8601toLocalDateTimeCast.class})
 public interface QuoteMapper {
 
-	@Mapping(target="uuidProveedor", source="id")
-	@Mapping(target = "uuid", source = "external_ref")	
+	@Mapping(target="idExternoProveedor", source="id")
+	@Mapping(target = "idExterno", source = "external_ref")	
 	
 	@Mapping(target = "activoBase", source = "base_asset")	
 	@Mapping(target = "activoCoti", source = "quote_asset")	

@@ -10,83 +10,81 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.davalores.crypto.provider.app.ripio.port.out.CrearClientePortOut;
+import com.davalores.crypto.provider.app.ripio.port.out.CrearOperacionPortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
-import com.davalores.crypto.provider.domain.model.exception.ClienteCrearException;
 import com.davalores.crypto.provider.domain.model.exception.CotizacionException;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.EndUserCreateDto;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.EndUserDto;
+import com.davalores.crypto.provider.domain.model.exception.OperacionException;
+import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteExecutionDto;
+import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.OperationDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class CrearClienteAdapterOut implements CrearClientePortOut {
+public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 
 	private String protocolo; 
 	private String dominio; 
 	private String apiPath; 
-	
-	public CrearClienteAdapterOut(@Value("${cripto-provider.ripio.protocolo}") String protocolo, 
-			@Value("${cripto-provider.ripio.dominio}") String dominio, 
-			@Value("${cripto-provider.ripio.apis.clienteCrear}") String apiPath) {
-		super();
-		this.protocolo = protocolo;
-		this.dominio = dominio;
-		this.apiPath = apiPath;
-	}
 
+	public CrearOperacionAdapterOut(@Value("${cripto-provider.ripio.protocolo}") String protocolo, 
+			@Value("${cripto-provider.ripio.dominio}") String dominio, 
+			@Value("${cripto-provider.ripio.apis.transaccionCrear}") String apiPath
+			) {
+		super();
+	}
+	
 	
 	@Override
-	public EndUserDto run(LoginTokenRipio loginToken) {
-		
+	public OperationDto run(LoginTokenRipio loginToken, String endUserId, QuoteExecutionDto transaccion) {
 		//Seteo de Headers
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON); 
 		headers.setBearerAuth(loginToken.getToken()); // Sets "Authorization: Bearer <token>"
 
 		//Seteo de Body
-		EndUserCreateDto requestDto = new EndUserCreateDto();
 		UUID externalRef = UUID.randomUUID();
-		requestDto.setExternal_ref(externalRef.toString());
+		transaccion.setExternal_ref(externalRef.toString());
 		ObjectMapper objectMapper = new ObjectMapper();
 		String requestBody = null;
 		try {
-			requestBody = objectMapper.writeValueAsString(requestDto);
-		} catch (JsonProcessingException e) {
-			throw new ClienteCrearException("Error JsonProcessingException", e.toString());
-		}
+			requestBody = objectMapper.writeValueAsString(transaccion);		
+        } catch (JsonProcessingException e) {	
+        	throw new OperacionException("Error JsonProcessingException", e.toString());
+        }
 		HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
-
-		//Ejecucion Rest Api
+		
+		//Realizo la llamada a la API de Ripio
 		RestTemplate restTemplate = new RestTemplate();		
-		ResponseEntity<String> response = restTemplate.postForEntity(buildUrl(), request, String.class);		
+		ResponseEntity<String> response = restTemplate.postForEntity(buildUrl(endUserId), request, String.class);
 		if ( !response.getStatusCode().is2xxSuccessful() ) {
-		    throw new CotizacionException(response.getStatusCode().toString(), "Error al generar una Cotizacion");
-		}
-
-		//Casteo a Dominio
-		ObjectMapper jsonMapper = new ObjectMapper();
-		EndUserDto dto = null;				
-		try {
-			dto = jsonMapper.readValue(response.getBody(), EndUserDto.class); 				
-		} catch (JsonMappingException e) {
-			throw new ClienteCrearException("Error JsonMappingException", e.toString());
-		} catch (JsonProcessingException e) {
-			throw new ClienteCrearException("Error JsonProcessingException", e.toString());
+		    throw new CotizacionException(response.getStatusCode().toString(), "Error al generar una Transaccion");
 		}
 		
-		return dto;				
+		//Casteo a Dominio
+		ObjectMapper jsonMapper = new ObjectMapper();
+		OperationDto dto = null;
+
+		try {
+			dto = jsonMapper.readValue(response.getBody(), OperationDto.class); 
+			dto.setExternal_ref(transaccion.getExternal_ref());
+		} catch (JsonMappingException e) {
+			throw new CotizacionException("Error JsonMappingException", e.toString());
+		} catch (JsonProcessingException e) {
+			throw new CotizacionException("Error JsonProcessingException", e.toString());
+		}
+		
+		return dto;
 	}
-	
-	private String buildUrl() {
+
+	private String buildUrl(String reusableQuoteId) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(protocolo);
 		sb.append("://");
 		sb.append(dominio);
-		sb.append(apiPath);
+		String apiPathParam = apiPath.replace(":reusableQuoteId", reusableQuoteId);
+		sb.append(apiPathParam);
 
 		return sb.toString();
 	}
-	
 }

@@ -1,4 +1,4 @@
-package com.davalores.crypto.provider.infra.ripio.adapter.out;
+package com.davalores.crypto.provider.infra.ripio.adapter.in.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

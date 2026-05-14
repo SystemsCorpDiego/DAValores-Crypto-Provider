@@ -15,6 +15,7 @@ import com.davalores.crypto.provider.app.ripio.port.out.LoginRipioPortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 import com.davalores.crypto.provider.domain.model.exception.LoginException;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.TokenDto;
+import com.davalores.crypto.provider.infra.ripio.adapter.in.mapper.TokenMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

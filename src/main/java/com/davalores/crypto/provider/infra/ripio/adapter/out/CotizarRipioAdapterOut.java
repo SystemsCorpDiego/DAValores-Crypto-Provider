@@ -8,15 +8,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.davalores.crypto.provider.app.ripio.port.out.CotizarRipioPortOut;
-import com.davalores.crypto.provider.domain.model.Cotizacion;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 import com.davalores.crypto.provider.domain.model.exception.CotizacionException;
-import com.davalores.crypto.provider.domain.model.exception.LoginException;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteCreateDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,25 +25,20 @@ public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 
 	private String protocolo; 
 	private String dominio; 
-	private String apiPath; 
-	
-	private QuoteMapper mapper;
-
+	private String apiPath; 	
 	
 	public CotizarRipioAdapterOut(@Value("${cripto-provider.ripio.protocolo}") String protocolo, 
 			@Value("${cripto-provider.ripio.dominio}") String dominio, 
-			@Value("${cripto-provider.ripio.apis.cotizar}") String apiPath,
-			QuoteMapper mapper) {
+			@Value("${cripto-provider.ripio.apis.cotizar}") String apiPath) {
 		super();
 		this.protocolo = protocolo;
 		this.dominio = dominio;
 		this.apiPath = apiPath;
-		this.mapper = mapper;
 	}
 
 
 	@Override
-    public Cotizacion run(LoginTokenRipio loginToken, String par) {
+    public QuoteDto run(LoginTokenRipio loginToken, String par) {
 
 		//Seteo de Headers
 		HttpHeaders headers = new HttpHeaders();
@@ -79,11 +70,10 @@ public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 		
 		//Casteo a Dominio
 		ObjectMapper jsonMapper = new ObjectMapper();
-		QuoteDto quoteDto = null;
-		Cotizacion dto = null;
+		QuoteDto dto = null;
+
 		try {
-			quoteDto = jsonMapper.readValue(response.getBody(), QuoteDto.class); 	
-			dto = mapper.run(quoteDto);							
+			dto = jsonMapper.readValue(response.getBody(), QuoteDto.class); 											
 		} catch (JsonMappingException e) {
 			throw new CotizacionException("Error JsonMappingException", e.toString());
 		} catch (JsonProcessingException e) {

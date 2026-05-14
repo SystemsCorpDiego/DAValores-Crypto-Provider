@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 
 import com.davalores.crypto.provider.app.port.in.CotizarPortIn;
 import com.davalores.crypto.provider.app.ripio.port.out.CotizarRipioPortOut;
-import com.davalores.crypto.provider.domain.model.Cotizacion;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
+import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteDto;
 
 @Service
 public class CotizarRipioService implements CotizarPortIn {
@@ -21,10 +21,10 @@ public class CotizarRipioService implements CotizarPortIn {
 
 
 	@Override
-    public Cotizacion run(String par) {
+    public QuoteDto run(String par) {
         
         LoginTokenRipio loginToken = loginRipioService.run();
-        Cotizacion cotizacion = cotizacionObtener.run(loginToken, par);
+        QuoteDto cotizacion = cotizacionObtener.run(loginToken, par);
 
         return cotizacion;
 	}
