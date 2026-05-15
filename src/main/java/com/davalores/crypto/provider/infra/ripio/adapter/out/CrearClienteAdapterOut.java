@@ -5,21 +5,27 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.davalores.crypto.provider.app.ripio.port.out.CrearClientePortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
-import com.davalores.crypto.provider.domain.model.exception.ClienteCrearException;
-import com.davalores.crypto.provider.domain.model.exception.CotizacionException;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.EndUserCreateDto;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.EndUserDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.EndUserCreateDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.EndUserDto;
+import com.davalores.crypto.provider.infra.exception.ClienteCrearException;
+import com.davalores.crypto.provider.infra.exception.CotizacionException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class CrearClienteAdapterOut implements CrearClientePortOut {
 
@@ -54,15 +60,32 @@ public class CrearClienteAdapterOut implements CrearClientePortOut {
 		try {
 			requestBody = objectMapper.writeValueAsString(requestDto);
 		} catch (JsonProcessingException e) {
+			log.error("CrearClienteAdapterOut() - JsonProcessingException: " + e.getMessage());
 			throw new ClienteCrearException("Error JsonProcessingException", e.toString());
 		}
 		HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 
 		//Ejecucion Rest Api
-		RestTemplate restTemplate = new RestTemplate();		
-		ResponseEntity<String> response = restTemplate.postForEntity(buildUrl(), request, String.class);		
+		RestTemplate restTemplate = new RestTemplate();	
+		ResponseEntity<String> response = null;
+		
+		try {
+			response = restTemplate.postForEntity(buildUrl(), request, String.class);		
+		} catch (HttpClientErrorException.NotFound e) {
+		    // Handle 404 specifically
+		    log.error("CrearClienteAdapterOut() - Resource not found: " + e.getMessage());		    
+		    throw new ClienteCrearException(HttpStatus.NOT_FOUND.toString(), "CrearClienteAdapterOut() - Resource not found: " + e.getMessage() );
+		} catch (HttpStatusCodeException e) {
+		    // Handle other HTTP errors (4xx or 5xx)
+			log.error("CrearClienteAdapterOut() - HTTP Error: " + e.getStatusCode());
+			throw new ClienteCrearException("4xx / 5xx", "CrearClienteAdapterOut() - HTTP Error: " + e.getMessage() );
+		} catch (Exception e) {
+			log.error("CrearClienteAdapterOut() - Exception: " + e.getMessage());
+			throw new ClienteCrearException("Error al generar un Cliente", e.toString());
+		}
+		
 		if ( !response.getStatusCode().is2xxSuccessful() ) {
-		    throw new CotizacionException(response.getStatusCode().toString(), "Error al generar una Cotizacion");
+		    throw new ClienteCrearException(response.getStatusCode().toString(), "Error al generar el Cliente");
 		}
 
 		//Casteo a Dominio
@@ -71,8 +94,10 @@ public class CrearClienteAdapterOut implements CrearClientePortOut {
 		try {
 			dto = jsonMapper.readValue(response.getBody(), EndUserDto.class); 				
 		} catch (JsonMappingException e) {
+			log.error("CrearClienteAdapterOut() - JsonMappingException: " + e.getMessage());
 			throw new ClienteCrearException("Error JsonMappingException", e.toString());
 		} catch (JsonProcessingException e) {
+			log.error("CrearClienteAdapterOut() - JsonProcessingException: " + e.getMessage());
 			throw new ClienteCrearException("Error JsonProcessingException", e.toString());
 		}
 		

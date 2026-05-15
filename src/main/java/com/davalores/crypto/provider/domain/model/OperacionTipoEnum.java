@@ -1,6 +1,6 @@
 package com.davalores.crypto.provider.domain.model;
 
-import com.davalores.crypto.provider.domain.model.exception.NotFoundException;
+import com.davalores.crypto.provider.infra.exception.NotFoundException;
 
 public enum OperacionTipoEnum {
 	

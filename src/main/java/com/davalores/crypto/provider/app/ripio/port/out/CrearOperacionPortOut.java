@@ -1,8 +1,8 @@
 package com.davalores.crypto.provider.app.ripio.port.out;
 
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteExecutionDto;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.OperationDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.OperationDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteExecutionDto;
 
 public interface CrearOperacionPortOut {
 

@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import com.davalores.crypto.provider.app.port.in.CrearOperacionRipioPortInt;
 import com.davalores.crypto.provider.app.ripio.port.out.CrearOperacionPortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.OperationDto;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteExecutionDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.OperationDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteExecutionDto;
 
 @Service
 public class CrearOperacionRipioService implements CrearOperacionRipioPortInt {

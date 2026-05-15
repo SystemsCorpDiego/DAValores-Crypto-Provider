@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.provider.app.port.in.CotizarRipioPortIn;
-import com.davalores.crypto.provider.domain.model.Cotizacion;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.CotizarRipioDto;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteDto;
+import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.CotizacionResponseDto;
+import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.CotizarRipioRequestDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.mapper.QuoteMapper;
 
 @RestController
@@ -26,11 +26,11 @@ public class CotizarRipioController {
 
 
 	@PostMapping("/")
-	public Cotizacion get(@RequestBody CotizarRipioDto request) {
+	public CotizacionResponseDto get(@RequestBody CotizarRipioRequestDto request) {
 		String par = request.getActivoBase() + "_" + request.getActivoCoti();		
 		
 		QuoteDto dto = portIn.run(par);
-		Cotizacion response = mapper.run(dto);
+		CotizacionResponseDto response = mapper.run(dto);
 		
 		return response;
 	}

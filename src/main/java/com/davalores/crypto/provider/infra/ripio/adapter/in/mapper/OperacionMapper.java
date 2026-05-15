@@ -3,19 +3,19 @@ package com.davalores.crypto.provider.infra.ripio.adapter.in.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.davalores.crypto.provider.domain.model.Operacion;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.OperacionDto;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.OperationDto;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteExecutionDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.OperationDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteExecutionDto;
+import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.OperacionResponseDto;
+import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.OperacionRipioRequestDto;
 
 @Mapper
 public interface OperacionMapper {
 
 	@Mapping(target="op_type", source="tipo")
 	@Mapping(target="end_user_id", source="idExternoCliente")	
-	@Mapping(target="base_amount", source="idExternoProveedorCotizacion")
 	@Mapping(target="quote_amount", source="cantidad")
-	public QuoteExecutionDto run(OperacionDto dto);
+	//@Mapping(target="base_amount", source="idExternoProveedorCotizacion")
+	public QuoteExecutionDto run(OperacionRipioRequestDto dto);
 	 
 	
 	//PKs
@@ -35,6 +35,6 @@ public interface OperacionMapper {
 	@Mapping(target="activoBaseCantidad", source="base_amount")
 	@Mapping(target="activoCoti", source="quote_asset")
 	@Mapping(target="activoCotiCantidad", source="quote_amount")
-	public Operacion run(OperationDto dto);
+	public OperacionResponseDto run(OperationDto dto);
 	
 }

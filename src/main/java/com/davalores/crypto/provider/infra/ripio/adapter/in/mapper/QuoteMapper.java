@@ -3,8 +3,8 @@ package com.davalores.crypto.provider.infra.ripio.adapter.in.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.davalores.crypto.provider.domain.model.Cotizacion;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteDto;
+import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.CotizacionResponseDto;
 
 
 @Mapper(componentModel = "spring", uses = {DateISO8601toLocalDateTimeCast.class})
@@ -25,6 +25,6 @@ public interface QuoteMapper {
 	
 	@Mapping(target = "expira", source = "expires_at")		
 
-	public Cotizacion run(QuoteDto quote);
+	public CotizacionResponseDto run(QuoteDto quote);
 	
 }

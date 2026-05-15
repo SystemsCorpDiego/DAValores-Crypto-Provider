@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.provider.app.port.in.CrearClienteRipioPortIn;
-import com.davalores.crypto.provider.domain.model.Cliente;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.EndUserDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.EndUserDto;
+import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.ClienteResponseDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.mapper.EndUserMapper;
 
 @RestController
@@ -23,10 +23,10 @@ public class CrearClienteRipioController {
 	}
 	
 	@PostMapping("/")
-	public Cliente run() {
+	public ClienteResponseDto run() {
 
 		EndUserDto dto = portIn.run();
-		Cliente response = mapper.run(dto);
+		ClienteResponseDto response = mapper.run(dto);
 		
 		return response;
     }

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.davalores.crypto.provider.app.port.in.CotizarRipioPortIn;
 import com.davalores.crypto.provider.app.ripio.port.out.CotizarRipioPortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
-import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteDto;
 
 @Service
 public class CotizarRipioService implements CotizarRipioPortIn {

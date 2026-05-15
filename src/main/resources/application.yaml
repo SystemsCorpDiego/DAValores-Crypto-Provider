@@ -6,7 +6,7 @@ cripto-provider:
          login: ${CRYPTO_PATH_LOGIN:/oauth2/token/}
          cotizar: ${CRYPTO_PATH_COTIZAR:/api/v1/reusable-quotes/}
          clienteCrear: ${CRYPTO_PATH_CLIENTECREAR:/api/v1/end-users/}
-         operacionCrear: ${CRYPTO_PATH_CLIENTECREAR:/api/v1/reusable-quotes/:reusableQuoteId/actions/execute/}
+         operacionCrear: ${CRYPTO_PATH_OPERACIONCREAR:/api/v1/reusable-quotes/:reusableQuoteId/actions/execute/}
       seguridad:
          clienteId: ${CRYPTO_CLIENT_ID}
          clienteSecreto: ${CRYPTO_CLIENT_SECRET}		 
