@@ -10,12 +10,12 @@ import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.EndUser
 @Mapper
 public interface EndUserMapper {
 
-	@Mapping(target = "id", source = "external_ref")	
+	@Mapping(target = "idExterno", source = "external_ref")	
 	@Mapping(target = "tieneInfoCuenta", source = "has_billing_info")	
 	@Mapping(target = "email", source = "email")	
 	public Cliente run(EndUserDto dto);
-	
-	@Mapping(target="id", source="external_ref")
+	 
+	@Mapping(target="idExterno", source="external_ref")
 	public Cliente run(EndUserCreateDto dto);
 
 }

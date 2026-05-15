@@ -16,7 +16,7 @@ import com.davalores.crypto.provider.infra.ripio.adapter.in.mapper.OperacionMapp
 @RestController
 @RequestMapping("/ripio/operacion")
 public class CrearOperacionRipioController {
-	
+	 
 	private CrearOperacionRipioPortInt portIn;
 	private OperacionMapper mapper;
 	
@@ -30,7 +30,7 @@ public class CrearOperacionRipioController {
 		dto.setTipo(OperacionTipoEnum.COMPRA.getCodigoRipio());		
 		
 		QuoteExecutionDto quoteExecution = mapper.run(dto);
-		OperationDto operationDto = portIn.run(dto.getCotizacionIdProveedor(), quoteExecution);
+		OperationDto operationDto = portIn.run(dto.getIdExternoProveedorCotizacion(), quoteExecution);
 		Operacion operacion = mapper.run(operationDto);
 		operacion.setTipo(OperacionTipoEnum.COMPRA.getCodigo());
 		return operacion;
@@ -41,7 +41,7 @@ public class CrearOperacionRipioController {
 		dto.setTipo(OperacionTipoEnum.VENTA.getCodigoRipio());		
 		
 		QuoteExecutionDto quoteExecution = mapper.run(dto); 		
-		OperationDto operationDto = portIn.run(dto.getCotizacionIdProveedor(), quoteExecution);
+		OperationDto operationDto = portIn.run(dto.getIdExternoProveedorCotizacion(), quoteExecution);
 		Operacion operacion = mapper.run(operationDto);
 		operacion.setTipo(OperacionTipoEnum.VENTA.getCodigo());
 		

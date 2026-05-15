@@ -3,15 +3,16 @@ package com.davalores.crypto.provider.domain.model;
 
 public class Cliente {
 
-	private String id; //uuid v4
+	private String idExterno; //uuid v4
 	private Boolean tieneInfoCuenta;
 	private String 	email;
 	
-	public String getId() {
-		return id;
+	
+	public String getIdExterno() {
+		return idExterno;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setIdExterno(String idExterno) {
+		this.idExterno = idExterno;
 	}
 	public Boolean getTieneInfoCuenta() {
 		return tieneInfoCuenta;

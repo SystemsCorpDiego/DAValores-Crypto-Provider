@@ -6,7 +6,7 @@ public class Operacion {
 	//PKs
 	String idExterno;				// external_ref del request en Quote-execute
 	String idExternoProveedor;		// id
-	String trxIdProveedor;			// txn_id 
+	String trxIdExternoProveedor;	// txn_id 
 	String quoteId;	 				// response.quote_id (no se que es) no es endUser.external_ref ni endUser.id
 	String idExternoCliente;		// end_user_id => endUser.external_ref
 	String proveedor;				// Constante 'RIPIO'
@@ -41,12 +41,13 @@ public class Operacion {
 		this.idExternoProveedor = idExternoProveedor;
 	}
 
-	public String getTrxIdProveedor() {
-		return trxIdProveedor;
+	
+	public String getTrxIdExternoProveedor() {
+		return trxIdExternoProveedor;
 	}
 
-	public void setTrxIdProveedor(String trxIdProveedor) {
-		this.trxIdProveedor = trxIdProveedor;
+	public void setTrxIdExternoProveedor(String trxIdExternoProveedor) {
+		this.trxIdExternoProveedor = trxIdExternoProveedor;
 	}
 
 	public String getQuoteId() {

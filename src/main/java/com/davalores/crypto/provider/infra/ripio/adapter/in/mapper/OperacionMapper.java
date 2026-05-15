@@ -12,16 +12,16 @@ import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.QuoteEx
 public interface OperacionMapper {
 
 	@Mapping(target="op_type", source="tipo")
-	@Mapping(target="end_user_id", source="cliente")	
-	@Mapping(target="base_amount", source="cotizacion")
+	@Mapping(target="end_user_id", source="idExternoCliente")	
+	@Mapping(target="base_amount", source="idExternoProveedorCotizacion")
 	@Mapping(target="quote_amount", source="cantidad")
 	public QuoteExecutionDto run(OperacionDto dto);
-	
+	 
 	
 	//PKs
 	@Mapping(target="idExterno", source="external_ref") // external_ref del request en Quote-execute
 	@Mapping(target="idExternoProveedor", source="id")
-	@Mapping(target="trxIdProveedor", source="txn_id")
+	@Mapping(target="trxIdExternoProveedor", source="txn_id")
 	@Mapping(target="quoteId", source="quote_id")
 	@Mapping(target="idExternoCliente", source="end_user_id")
 	@Mapping(target="proveedor", constant  = "RIPIO")
