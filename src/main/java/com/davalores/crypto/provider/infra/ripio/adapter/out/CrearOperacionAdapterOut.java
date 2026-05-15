@@ -29,14 +29,14 @@ public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 
 	public CrearOperacionAdapterOut(@Value("${cripto-provider.ripio.protocolo}") String protocolo, 
 			@Value("${cripto-provider.ripio.dominio}") String dominio, 
-			@Value("${cripto-provider.ripio.apis.transaccionCrear}") String apiPath
+			@Value("${cripto-provider.ripio.apis.operacionCrear}") String apiPath
 			) {
 		super();
 	}
 	
 	
 	@Override
-	public OperationDto run(LoginTokenRipio loginToken, String endUserId, QuoteExecutionDto transaccion) {
+	public OperationDto run(LoginTokenRipio loginToken, String cotizacionId, QuoteExecutionDto transaccion) {
 		//Seteo de Headers
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON); 
@@ -56,7 +56,7 @@ public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 		
 		//Realizo la llamada a la API de Ripio
 		RestTemplate restTemplate = new RestTemplate();		
-		ResponseEntity<String> response = restTemplate.postForEntity(buildUrl(endUserId), request, String.class);
+		ResponseEntity<String> response = restTemplate.postForEntity(buildUrl(cotizacionId), request, String.class);
 		if ( !response.getStatusCode().is2xxSuccessful() ) {
 		    throw new CotizacionException(response.getStatusCode().toString(), "Error al generar una Transaccion");
 		}
@@ -77,12 +77,12 @@ public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 		return dto;
 	}
 
-	private String buildUrl(String reusableQuoteId) {
+	private String buildUrl(String cotizacionId) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(protocolo);
 		sb.append("://");
 		sb.append(dominio);
-		String apiPathParam = apiPath.replace(":reusableQuoteId", reusableQuoteId);
+		String apiPathParam = apiPath.replace(":reusableQuoteId", cotizacionId);
 		sb.append(apiPathParam);
 
 		return sb.toString();

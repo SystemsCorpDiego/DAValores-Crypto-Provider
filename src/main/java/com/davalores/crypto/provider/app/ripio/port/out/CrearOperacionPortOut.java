@@ -6,6 +6,6 @@ import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.caas.api.Operati
 
 public interface CrearOperacionPortOut {
 
-	public OperationDto run(LoginTokenRipio loginToken, String endUserId, QuoteExecutionDto transaccion);
+	public OperationDto run(LoginTokenRipio loginToken, String cotizacionId, QuoteExecutionDto transaccion);
 
 }
