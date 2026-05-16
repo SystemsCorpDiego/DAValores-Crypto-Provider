@@ -22,24 +22,6 @@ server:
 spring:
    application:
       name: cryptoProvider
-   datasource:
-      driver-class-name: oracle.jdbc.OracleDriver
-      username: ${DATABASE_USER}
-      password: ${DATABASE_PASSWORD}
-      url: ${DATABASE_URL}
-#      url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=sisa-dbdev01)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=SISADEV)))
-      max-idle: 1000
-      max-wait: 1000000
-      min-idle: 5
-      initial-size: 5
-      hikari:
-         connection-init-sql: alter session set nls_date_format = 'DD/MM/YYYY'  
-   jpa:
-      properties:
-         hibernate:
-            format_sql: true
-            default_schema: SISAOWN
-      show-sql: true
    jackson:
       deserialization:
          fail-on-unknown-properties: true
@@ -53,15 +35,3 @@ management:
          enabled: true
    security:
       enabled: false
-
-#logging:
-#   level:
-#      org: 
-#         hibernate:
-#            SQL: TRACE
-#            type:
-#               descriptor:
-#                  sql:
-#                     BasicBinder: TRACE
-#         springframework: TRACE
-            

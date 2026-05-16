@@ -13,13 +13,3 @@ spring:
 logging:
    level:
       root: DEBUG
-       
-#      org: 
-#         hibernate:
-#            SQL: TRACE
-#            type:
-#               descriptor:
-#                  sql:
-#                     BasicBinder: TRACE
-#         springframework: TRACE
-            
