@@ -10,8 +10,10 @@ spring:
       username: diego.bueno
       password: vRSZrzHO6S
       url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=sisa-dbdev01)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=SISADEV)))
-#logging:
-#   level:
+logging:
+   level:
+      root: DEBUG
+       
 #      org: 
 #         hibernate:
 #            SQL: TRACE

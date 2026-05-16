@@ -59,6 +59,7 @@ public class CrearClienteAdapterOut implements CrearClientePortOut {
 		String requestBody = null;
 		try {
 			requestBody = objectMapper.writeValueAsString(requestDto);
+			log.debug("CrearClienteAdapterOut() - requestBody: " + requestBody);
 		} catch (JsonProcessingException e) {
 			log.error("CrearClienteAdapterOut() - JsonProcessingException: " + e.getMessage());
 			throw new ClienteCrearException("Error JsonProcessingException", e.toString());
@@ -70,7 +71,9 @@ public class CrearClienteAdapterOut implements CrearClientePortOut {
 		ResponseEntity<String> response = null;
 		
 		try {
-			response = restTemplate.postForEntity(buildUrl(), request, String.class);		
+			log.debug("CrearClienteAdapterOut() - buildUrl: " + buildUrl());
+			response = restTemplate.postForEntity(buildUrl(), request, String.class);
+			log.debug("CrearClienteAdapterOut() - ResponseEntity: " + response.toString());
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
 		    log.error("CrearClienteAdapterOut() - Resource not found: " + e.getMessage());		    

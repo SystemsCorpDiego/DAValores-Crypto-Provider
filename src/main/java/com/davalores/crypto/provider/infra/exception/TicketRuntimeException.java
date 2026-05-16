@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public abstract class TicketRuntimeException extends RuntimeException  implements ITicketException {
+public abstract class TicketRuntimeException extends RuntimeException implements ITicketException {
 
 	private static final long serialVersionUID = 4407349629165956040L;
 	private String codeWebsite = "DAVCRY";

@@ -59,7 +59,8 @@ public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String requestBody = null;
 		try {
-			requestBody = objectMapper.writeValueAsString(requestDto);		
+			requestBody = objectMapper.writeValueAsString(requestDto);	
+			log.debug("CrearOperacionAdapterOut() - requestBody: " + requestBody);
         } catch (JsonProcessingException e) {
         	log.error("CrearOperacionAdapterOut() - JsonProcessingException: " + e.getMessage());
         	throw new CotizacionException("Error JsonProcessingException", e.toString());
@@ -72,7 +73,9 @@ public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 		ResponseEntity<String> response = null;
 		
 		try {
+			log.debug("CrearOperacionAdapterOut() - buildUrl(): " + buildUrl());
 			response = restTemplate.postForEntity(buildUrl(), request, String.class);
+			log.debug("CrearOperacionAdapterOut() - response: " + response.toString());
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
 		    log.error("CotizarRipioAdapterOut() - Resource not found: " + e.getMessage());		    

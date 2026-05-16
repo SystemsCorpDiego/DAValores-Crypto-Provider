@@ -17,9 +17,9 @@ import com.davalores.crypto.provider.app.ripio.port.out.CrearOperacionPortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.OperationDto;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteExecutionDto;
-import com.davalores.crypto.provider.infra.exception.CotizacionException;
 import com.davalores.crypto.provider.infra.exception.OperacionException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -58,6 +58,7 @@ public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 		String requestBody = null;
 		try {
 			requestBody = objectMapper.writeValueAsString(transaccion);		
+			log.debug("CrearOperacionAdapterOut() - requestBody: " + requestBody);
         } catch (JsonProcessingException e) {	
         	log.error("CrearOperacionAdapterOut() - JsonProcessingException: " + e.getMessage());	
         	throw new OperacionException("Error JsonProcessingException", "CrearOperacionAdapterOut() - Exception: " + e.toString());
@@ -68,7 +69,9 @@ public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 		RestTemplate restTemplate = new RestTemplate();		
 		ResponseEntity<String> response = null;
 		try {
+			log.debug("CrearOperacionAdapterOut() - buildUrl(cotizacionId): " + buildUrl(cotizacionId));
 			response = restTemplate.postForEntity(buildUrl(cotizacionId), request, String.class);
+			log.debug("CrearOperacionAdapterOut() - ResponseEntity: " + response.toString());
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
 		    log.error("CrearOperacionAdapterOut() - Resource not found: " + e.getMessage());		    
@@ -88,6 +91,7 @@ public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 		
 		//Casteo a Dominio
 		ObjectMapper jsonMapper = new ObjectMapper();
+		jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		OperationDto dto = null;
 
 		try {

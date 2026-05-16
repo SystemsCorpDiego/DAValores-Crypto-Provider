@@ -3,23 +3,30 @@ package com.davalores.crypto.provider.infra.ripio.adapter.out;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.davalores.crypto.provider.app.ripio.port.out.LoginRipioPortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.TokenDto;
+import com.davalores.crypto.provider.infra.exception.CotizacionException;
 import com.davalores.crypto.provider.infra.exception.LoginException;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.mapper.TokenMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class LoginRipioAdapterOut implements	LoginRipioPortOut {
 
@@ -61,11 +68,27 @@ public class LoginRipioAdapterOut implements	LoginRipioPortOut {
 		
 		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
 		requestBody.add("grant_type", "client_credentials");
-				
+		
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(requestBody, headers);
 		
-		ResponseEntity<String> response = restTemplate.postForEntity(buildUrl(), request, String.class);		
-
+		ResponseEntity<String> response;
+		try {
+			log.debug("LoginRipioAdapterOut() - buildUrl(): " + buildUrl());
+			response = restTemplate.postForEntity(buildUrl(), request, String.class);
+			log.debug("LoginRipioAdapterOut() - response: " + response.toString());
+		} catch (HttpClientErrorException.NotFound e) {
+		    // Handle 404 specifically
+		    log.error("LoginRipioAdapterOut() - Resource not found: " + e.getMessage());		    
+		    throw new LoginException(HttpStatus.NOT_FOUND.toString(), "CotizarRipioAdapterOut() - Resource not found: " + e.getMessage() );
+		} catch (HttpStatusCodeException e) {
+		    // Handle other HTTP errors (4xx or 5xx)
+			log.error("LoginRipioAdapterOut() - HTTP Error: " + e.getStatusCode());
+			throw new LoginException("4xx / 5xx", "CotizarRipioAdapterOut() - HTTP Error: " + e.getMessage() );
+		} catch (Exception e) {
+			log.error("LoginRipioAdapterOut() - ERROR-INESPERADO: " + e.toString());
+			throw new LoginException("ERROR-INESPERADO", "CotizarRipioAdapterOut() - Error en restTemplate: " + e.toString());
+		}
+		
 		if ( !response.getStatusCode().is2xxSuccessful() ) {
 		    throw new LoginException(response.getStatusCode().toString(), "Error al obtener el token de login");
 		}
@@ -80,8 +103,10 @@ public class LoginRipioAdapterOut implements	LoginRipioPortOut {
 			
 			return dto;			
 		} catch (JsonMappingException e) {
+			log.error("LoginRipioAdapterOut() - JsonMappingException: " + e.getMessage());
 			throw new LoginException("Error al mapear el JSON a TokenDto", e.toString());
 		} catch (JsonProcessingException e) {
+			log.error("LoginRipioAdapterOut() - JsonProcessingException: " + e.getMessage());
 			throw new LoginException("Error al procesar el JSON", e.toString());
 		}		
 	}

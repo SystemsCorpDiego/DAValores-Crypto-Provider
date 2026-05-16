@@ -30,7 +30,7 @@ public class CrearOperacionRipioController {
 		dto.setTipo(OperacionTipoEnum.COMPRA.getCodigoRipio());		
 		
 		QuoteExecutionDto quoteExecution = mapper.run(dto);
-		quoteExecution.setQuote_amount(0L);
+		quoteExecution.setBase_amount(0L);
 		OperationDto operationDto = portIn.run(dto.getIdExternoProveedorCotizacion(), quoteExecution);
 		OperacionResponseDto operacion = mapper.run(operationDto);
 		operacion.setTipo(OperacionTipoEnum.COMPRA.getCodigo());
@@ -42,7 +42,7 @@ public class CrearOperacionRipioController {
 		dto.setTipo(OperacionTipoEnum.VENTA.getCodigoRipio());		
 		
 		QuoteExecutionDto quoteExecution = mapper.run(dto); 		
-		quoteExecution.setQuote_amount(0L);
+		quoteExecution.setBase_amount(0L);
 		OperationDto operationDto = portIn.run(dto.getIdExternoProveedorCotizacion(), quoteExecution);
 		OperacionResponseDto operacion = mapper.run(operationDto);
 		operacion.setTipo(OperacionTipoEnum.VENTA.getCodigo());
