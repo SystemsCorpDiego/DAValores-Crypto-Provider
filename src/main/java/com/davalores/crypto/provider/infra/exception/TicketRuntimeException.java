@@ -1,6 +1,5 @@
 package com.davalores.crypto.provider.infra.exception;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -76,6 +75,7 @@ public abstract class TicketRuntimeException extends RuntimeException implements
 	
 	public TicketRuntimeException(String message) {
         super(message);
+        this.descripcion = message;
         
         generarTicket();
     }

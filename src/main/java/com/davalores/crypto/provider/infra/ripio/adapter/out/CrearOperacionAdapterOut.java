@@ -58,9 +58,9 @@ public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 		String requestBody = null;
 		try {
 			requestBody = objectMapper.writeValueAsString(transaccion);		
-			log.debug("CrearOperacionAdapterOut() - requestBody: " + requestBody);
+			log.debug("requestBody: " + requestBody);
         } catch (JsonProcessingException e) {	
-        	log.error("CrearOperacionAdapterOut() - JsonProcessingException: " + e.getMessage());	
+        	log.error("JsonProcessingException: " + e.getMessage());	
         	throw new OperacionException("Error JsonProcessingException", "CrearOperacionAdapterOut() - Exception: " + e.toString());
         }
 		HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
@@ -69,19 +69,19 @@ public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 		RestTemplate restTemplate = new RestTemplate();		
 		ResponseEntity<String> response = null;
 		try {
-			log.debug("CrearOperacionAdapterOut() - buildUrl(cotizacionId): " + buildUrl(cotizacionId));
+			log.debug("buildUrl(cotizacionId): " + buildUrl(cotizacionId));
 			response = restTemplate.postForEntity(buildUrl(cotizacionId), request, String.class);
-			log.debug("CrearOperacionAdapterOut() - ResponseEntity: " + response.toString());
+			log.debug("ResponseEntity: " + response.toString());
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
-		    log.error("CrearOperacionAdapterOut() - Resource not found: " + e.getMessage());		    
+		    log.error("Resource not found: " + e.getMessage());		    
 		    throw new OperacionException(HttpStatus.NOT_FOUND.toString(), "CrearOperacionAdapterOut() - Resource not found: " + e.getMessage() );
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
-			log.error("CrearOperacionAdapterOut() - HTTP Error: " + e.getStatusCode());
+			log.error("HTTP Error: " + e.getStatusCode());
 			throw new OperacionException("4xx / 5xx", "CrearOperacionAdapterOut() - HTTP Error: " + e.getMessage() );
 		} catch (Exception e) {
-			log.error("CrearOperacionAdapterOut() - ERROR-INESPERADO: " + e.toString());
+			log.error("ERROR-INESPERADO: " + e.toString());
 			throw new OperacionException("ERROR-INESPERADO", "CrearOperacionAdapterOut() - Error en restTemplate: " + e.toString());
 		}
 		
@@ -98,10 +98,10 @@ public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 			dto = jsonMapper.readValue(response.getBody(), OperationDto.class); 
 			dto.setExternal_ref(transaccion.getExternal_ref());
 		} catch (JsonMappingException e) {
-			log.error("CrearOperacionAdapterOut() - JsonMappingException: " + e.getMessage());
+			log.error("JsonMappingException: " + e.getMessage());
 			throw new OperacionException("Error JsonMappingException", "CrearOperacionAdapterOut() - Exception: " + e.toString());
 		} catch (JsonProcessingException e) {
-			log.error("CrearOperacionAdapterOut() - JsonProcessingException: " + e.getMessage());
+			log.error("JsonProcessingException: " + e.getMessage());
 			throw new OperacionException("Error JsonProcessingException", "CrearOperacionAdapterOut() - Exception: " + e.toString());
 		}
 		

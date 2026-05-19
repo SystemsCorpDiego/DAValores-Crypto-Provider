@@ -3,13 +3,19 @@ cripto-provider:
       seguridad:
          clienteId: ${CRYPTO_CLIENT_ID}
          clienteSecreto: ${CRYPTO_CLIENT_SECRET}
-server:
-   port: 8081
 spring:
-   datasource:
-      username: diego.bueno
-      password: vRSZrzHO6S
-      url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=sisa-dbdev01)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=SISADEV)))
+   output:
+      ansi:
+         enabled: always
+server:
+   port: 8092
+   #output:
+    #  ansi:
+     #    enabled: always
 logging:
    level:
-      root: DEBUG
+      root: ERROR
+      com:
+         davalores: TRACE
+   pattern:
+      console: "%clr(%d{mm:ss.SSS}){yellow} %clr(%.-3level) %clr(%-35.35logger{0}) %msg %n"

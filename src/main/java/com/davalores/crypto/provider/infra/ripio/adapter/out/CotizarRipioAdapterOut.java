@@ -60,9 +60,9 @@ public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 		String requestBody = null;
 		try {
 			requestBody = objectMapper.writeValueAsString(requestDto);	
-			log.debug("CrearOperacionAdapterOut() - requestBody: " + requestBody);
+			log.debug("requestBody: " + requestBody);
         } catch (JsonProcessingException e) {
-        	log.error("CrearOperacionAdapterOut() - JsonProcessingException: " + e.getMessage());
+        	log.error("JsonProcessingException: " + e.getMessage());
         	throw new CotizacionException("Error JsonProcessingException", e.toString());
         }
 		HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
@@ -73,19 +73,19 @@ public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 		ResponseEntity<String> response = null;
 		
 		try {
-			log.debug("CrearOperacionAdapterOut() - buildUrl(): " + buildUrl());
+			log.debug("buildUrl(): " + buildUrl());
 			response = restTemplate.postForEntity(buildUrl(), request, String.class);
-			log.debug("CrearOperacionAdapterOut() - response: " + response.toString());
+			log.debug("response: " + response.toString());
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
-		    log.error("CotizarRipioAdapterOut() - Resource not found: " + e.getMessage());		    
+		    log.error("Resource not found: " + e.getMessage());		    
 		    throw new CotizacionException(HttpStatus.NOT_FOUND.toString(), "CotizarRipioAdapterOut() - Resource not found: " + e.getMessage() );
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
-			log.error("CotizarRipioAdapterOut() - HTTP Error: " + e.getStatusCode());
+			log.error("HTTP Error: " + e.getStatusCode());
 			throw new CotizacionException("4xx / 5xx", "CotizarRipioAdapterOut() - HTTP Error: " + e.getMessage() );
 		} catch (Exception e) {
-			log.error("CotizarRipioAdapterOut() - ERROR-INESPERADO: " + e.toString());
+			log.error("ERROR-INESPERADO: " + e.toString());
 			throw new CotizacionException("ERROR-INESPERADO", "CotizarRipioAdapterOut() - Error en restTemplate: " + e.toString());
 		}
 		
@@ -101,10 +101,10 @@ public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 		try {
 			dto = jsonMapper.readValue(response.getBody(), QuoteDto.class); 											
 		} catch (JsonMappingException e) {
-			log.error("CotizarRipioAdapterOut() - JsonMappingException: " + e.getMessage());
+			log.error("JsonMappingException: " + e.getMessage());
 			throw new CotizacionException("Error JsonMappingException", e.toString());
 		} catch (JsonProcessingException e) {
-			log.error("CotizarRipioAdapterOut() - JsonProcessingException: " + e.getMessage());
+			log.error("JsonProcessingException: " + e.getMessage());
 			throw new CotizacionException("Error JsonProcessingException", e.toString());
 		}
 		
