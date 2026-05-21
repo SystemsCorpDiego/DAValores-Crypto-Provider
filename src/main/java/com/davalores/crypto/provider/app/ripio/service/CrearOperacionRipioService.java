@@ -8,6 +8,9 @@ import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.OperationDto;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteExecutionDto;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class CrearOperacionRipioService implements CrearOperacionRipioPortInt {
 
@@ -21,10 +24,12 @@ public class CrearOperacionRipioService implements CrearOperacionRipioPortInt {
 	
 	@Override
 	public OperationDto run(String cotizacionId, QuoteExecutionDto transaccion) {
-	
+		log.debug("input -> cotizacionId: {}, transaccion: {}", cotizacionId, transaccion);
+		
 		LoginTokenRipio loginToken = loginRipioService.run();
 		OperationDto transactionDto = crearOperacion.run(loginToken, cotizacionId, transaccion);
 		
+		log.debug("output -> transactionDto: {}", transactionDto);
 		return transactionDto;
 	}
 	

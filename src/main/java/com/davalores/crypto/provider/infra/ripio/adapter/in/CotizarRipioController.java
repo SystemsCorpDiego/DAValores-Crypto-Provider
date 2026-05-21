@@ -11,6 +11,9 @@ import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.CotizacionRespon
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.CotizarRipioRequestDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.mapper.QuoteMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/ripio/cotizacion")
 public class CotizarRipioController {
@@ -27,11 +30,13 @@ public class CotizarRipioController {
 
 	@PostMapping("/")
 	public CotizacionResponseDto get(@RequestBody CotizarRipioRequestDto request) {
+		log.debug("run -> request: {}", request);
 		String par = request.getActivoBase() + "_" + request.getActivoCoti();		
 		
 		QuoteDto dto = portIn.run(par);
 		CotizacionResponseDto response = mapper.run(dto);
 		
+		log.debug("response: {}", response);
 		return response;
 	}
 	

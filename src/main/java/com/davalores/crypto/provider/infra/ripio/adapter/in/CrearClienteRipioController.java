@@ -9,6 +9,9 @@ import com.davalores.crypto.provider.domain.model.ripio.caas.api.EndUserDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.ClienteResponseDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.mapper.EndUserMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/ripio/cliente")
 public class CrearClienteRipioController {
@@ -24,10 +27,11 @@ public class CrearClienteRipioController {
 	
 	@PostMapping("/")
 	public ClienteResponseDto run() {
-
+		log.debug("run -> ");
 		EndUserDto dto = portIn.run();
 		ClienteResponseDto response = mapper.run(dto);
 		
+		log.debug("response: {}", response);
 		return response;
     }
 	

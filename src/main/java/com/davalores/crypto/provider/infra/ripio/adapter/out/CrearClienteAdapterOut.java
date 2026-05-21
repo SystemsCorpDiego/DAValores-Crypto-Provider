@@ -76,12 +76,12 @@ public class CrearClienteAdapterOut implements CrearClientePortOut {
 			log.debug("ResponseEntity: " + response.toString());
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
-		    log.error("Resource not found: " + e.getMessage());		    
-		    throw new ClienteCrearException(HttpStatus.NOT_FOUND.toString(), "CrearClienteAdapterOut() - Resource not found: " + e.getMessage() );
+		    log.error("Resource not found: " + buildUrl() + " - ERROR: " + e.getMessage());		    
+		    throw new ClienteCrearException(HttpStatus.NOT_FOUND.toString(), "Resource not found: " + buildUrl() );
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
 			log.error("HTTP Error: " + e.getStatusCode());
-			throw new ClienteCrearException("4xx / 5xx", "CrearClienteAdapterOut() - HTTP Error: " + e.getMessage() );
+			throw new ClienteCrearException("4xx / 5xx", "HTTP Error: " + e.getMessage() );
 		} catch (Exception e) {
 			log.error("Exception: " + e.getMessage());
 			throw new ClienteCrearException("Error al generar un Cliente", e.toString());
