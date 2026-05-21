@@ -23,7 +23,7 @@ public class OperacionResponseDto {
 	String activoCoti;				// quote_asset ("ARS")
 	String activoCotiCantidad;		// Buy: es el quote_amount*buy_rate
 	
-	private LocalDateTime creadoEnProveedor;	// operacion.created_at 
+	String creadoEnProveedor;	// operacion.created_at 
 
 	public String getIdExterno() {
 		return idExterno;
@@ -146,13 +146,14 @@ public class OperacionResponseDto {
 		this.activoCotiCantidad = activoCotiCantidad;
 	}
 
-	public LocalDateTime getCreadoEnProveedor() {
+	public String getCreadoEnProveedor() {
 		return creadoEnProveedor;
 	}
 
-	public void setCreadoEnProveedor(LocalDateTime creadoEnProveedor) {
+	public void setCreadoEnProveedor(String creadoEnProveedor) {
 		this.creadoEnProveedor = creadoEnProveedor;
 	}
-	
+
+	 
 	
 }

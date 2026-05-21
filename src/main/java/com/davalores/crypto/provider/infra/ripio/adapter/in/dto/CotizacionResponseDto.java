@@ -1,7 +1,8 @@
 package com.davalores.crypto.provider.infra.ripio.adapter.in.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 
 public class CotizacionResponseDto {
@@ -15,7 +16,7 @@ public class CotizacionResponseDto {
 	private BigDecimal compraComision;
 	private BigDecimal ventaRatio;
 	private BigDecimal ventaComision;
-	private LocalDateTime expira;
+	private String expira; //TODO: revisar formato de fecha que devuelve ripio y parsear a LocalDateTime
 	
 	
 	public String getIdExterno() {
@@ -66,12 +67,11 @@ public class CotizacionResponseDto {
 	public void setVentaComision(BigDecimal ventaComision) {
 		this.ventaComision = ventaComision;
 	}
-	public LocalDateTime getExpira() {
+	public String getExpira() {
 		return expira;
 	}
-	public void setExpira(LocalDateTime expira) {
+	public void setExpira(String expira) {
 		this.expira = expira;
 	}
-
 	
 }

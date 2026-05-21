@@ -35,6 +35,7 @@ public interface OperacionMapper {
 	@Mapping(target="activoBaseCantidad", source="base_amount")
 	@Mapping(target="activoCoti", source="quote_asset")
 	@Mapping(target="activoCotiCantidad", source="quote_amount")
+	@Mapping(target="creadoEnProveedor", source="created_at")	
 	public OperacionResponseDto run(OperationDto dto);
 	
 }

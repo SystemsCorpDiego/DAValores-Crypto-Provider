@@ -23,7 +23,7 @@ public interface QuoteMapper {
 	@Mapping(target = "ventaRatio", source = "sell_rate")	
 	@Mapping(target = "ventaComision", source = "sell_fee_percentage")	
 	
-	@Mapping(target = "expira", source = "expires_at")		
+	@Mapping(target = "expira", source = "expires_at") //, dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
 
 	public CotizacionResponseDto run(QuoteDto quote);
 	
