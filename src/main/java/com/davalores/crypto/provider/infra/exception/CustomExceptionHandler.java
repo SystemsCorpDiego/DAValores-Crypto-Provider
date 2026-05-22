@@ -1,6 +1,7 @@
 package com.davalores.crypto.provider.infra.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,8 +34,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		problemDetail.setProperty("ticket", ex.getTicketError());
 		problemDetail.setProperty("fecha", ex.getDate());
 		problemDetail.setProperty("tipo", ex.getErrorType());
-		
-		
+		problemDetail.setProperty("codigo", ex.getCodigo());
+		if ( ex.getStatusString() != null ) {
+			try {
+				HttpStatusCode statusCode = HttpStatusCode.valueOf(Integer.parseInt(ex.getStatusString()));
+				status = HttpStatus.resolve(statusCode.value());
+				problemDetail.setStatus(status);
+			} catch (Exception e) {}
+		}
 		log.error("TicketRuntimeException - FIN");
 		return ResponseEntity.status(status).body(problemDetail);						
 	}

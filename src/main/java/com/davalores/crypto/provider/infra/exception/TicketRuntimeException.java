@@ -14,6 +14,7 @@ public abstract class TicketRuntimeException extends RuntimeException implements
 	private String codeWebsite = "DAVCRY";
 	public String codigo;
 	public String descripcion;
+	private String statusString;
 
 	private Integer nroTicket;
 	private LocalDateTime date;
@@ -67,6 +68,15 @@ public abstract class TicketRuntimeException extends RuntimeException implements
 	
 	public TicketRuntimeException(String codigo, String descripcion) {
 		super();
+		this.codigo = codigo;
+		this.descripcion = descripcion;
+		
+        generarTicket();
+	}
+	
+	public TicketRuntimeException(String statusString, String codigo, String descripcion) {
+		super();
+		this.statusString = statusString;
 		this.codigo = codigo;
 		this.descripcion = descripcion;
 		

@@ -18,7 +18,9 @@ import com.davalores.crypto.provider.app.ripio.port.out.LoginRipioPortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.TokenDto;
 import com.davalores.crypto.provider.infra.exception.CotizacionException;
+import com.davalores.crypto.provider.infra.exception.ErrorCoreEnum;
 import com.davalores.crypto.provider.infra.exception.LoginException;
+import com.davalores.crypto.provider.infra.exception.OperacionException;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.mapper.TokenMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -30,12 +32,12 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class LoginRipioAdapterOut implements	LoginRipioPortOut {
 
-	private String clienteId;
-	private String clienteSecreto;
+	private final String clienteId;
+	private final String clienteSecreto;
 	
-	private String protocolo; 
-	private String dominio; 
-	private String apiPath; 
+	private final String protocolo; 
+	private final String dominio; 
+	private final String apiPath; 
 	
 	private TokenMapper mapper;
 	
@@ -71,7 +73,7 @@ public class LoginRipioAdapterOut implements	LoginRipioPortOut {
 		
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(requestBody, headers);
 		
-		ResponseEntity<String> response;
+		ResponseEntity<String> response = null;
 		try {
 			log.debug("buildUrl(): " + buildUrl());
 			response = restTemplate.postForEntity(buildUrl(), request, String.class);
@@ -79,18 +81,23 @@ public class LoginRipioAdapterOut implements	LoginRipioPortOut {
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
 		    log.error("Resource not found: " + e.getMessage());		    
-		    throw new LoginException(HttpStatus.NOT_FOUND.toString(), "CotizarRipioAdapterOut() - Resource not found: " + e.getMessage() );
+		    throw new LoginException(ErrorCoreEnum.HTTP_NOT_FOUND.toString(), "Resource not found: " + buildUrl() );
+		} catch (HttpClientErrorException.Unauthorized e) {
+			// Handle 401 specifically
+			log.error("Unauthorized: " + e.getMessage());
+			throw new LoginException(ErrorCoreEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "login no autorizado");
+			
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
-			log.error("HTTP Error: " + e.getStatusCode());
-			throw new LoginException("4xx / 5xx", "CotizarRipioAdapterOut() - HTTP Error: " + e.getMessage() );
+			log.error("HTTP Error: " + e.getStatusCode());			
+			throw new LoginException(ErrorCoreEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + buildUrl()  + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
 		} catch (Exception e) {
-			log.error("ERROR-INESPERADO: " + e.toString());
-			throw new LoginException("ERROR-INESPERADO", "CotizarRipioAdapterOut() - Error en restTemplate: " + e.toString());
+			log.error("ERROR-INESPERADO: " + e.toString());			
+			throw new LoginException(ErrorCoreEnum.UNEXPECTED_ERROR.toString(), "Error Msg: " + e.toString());
 		}
 		
 		if ( !response.getStatusCode().is2xxSuccessful() ) {
-		    throw new LoginException(response.getStatusCode().toString(), "Error al obtener el token de login");
+		    throw new LoginException(ErrorCoreEnum.HTTP_ERROR.toString(), "HTTP Error: " + response.getStatusCode().toString() + " Error Msg: " + response.getBody());
 		}
 		
 		try {
@@ -103,11 +110,11 @@ public class LoginRipioAdapterOut implements	LoginRipioPortOut {
 			
 			return dto;			
 		} catch (JsonMappingException e) {
-			log.error("JsonMappingException: " + e.getMessage());
-			throw new LoginException("Error al mapear el JSON a TokenDto", e.toString());
+			log.error("JsonMappingException: " + e.getMessage());			
+			throw new LoginException(ErrorCoreEnum.JSON_MAPPER_DESERIALIZE_ERROR.toString(), "Error JsonMappingException - Response.body: " + response.getBody() + " - Error: " + e.toString());
 		} catch (JsonProcessingException e) {
 			log.error("JsonProcessingException: " + e.getMessage());
-			throw new LoginException("Error al procesar el JSON", e.toString());
+			throw new LoginException(ErrorCoreEnum.JSON_MAPPER_DESERIALIZE_ERROR.toString(), "Error JsonProcessingException - Response.body: " + response.getBody() + " - Error: " + e.toString());
 		}		
 	}
 	

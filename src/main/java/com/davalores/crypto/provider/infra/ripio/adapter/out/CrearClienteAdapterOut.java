@@ -19,6 +19,8 @@ import com.davalores.crypto.provider.domain.model.ripio.caas.api.EndUserCreateDt
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.EndUserDto;
 import com.davalores.crypto.provider.infra.exception.ClienteCrearException;
 import com.davalores.crypto.provider.infra.exception.CotizacionException;
+import com.davalores.crypto.provider.infra.exception.ErrorCoreEnum;
+import com.davalores.crypto.provider.infra.exception.OperacionException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,9 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class CrearClienteAdapterOut implements CrearClientePortOut {
 
-	private String protocolo; 
-	private String dominio; 
-	private String apiPath; 
+	private final String protocolo; 
+	private final String dominio; 
+	private final String apiPath; 
 	
 	public CrearClienteAdapterOut(@Value("${cripto-provider.ripio.protocolo}") String protocolo, 
 			@Value("${cripto-provider.ripio.dominio}") String dominio, 
@@ -62,7 +64,7 @@ public class CrearClienteAdapterOut implements CrearClientePortOut {
 			log.debug("requestBody: " + requestBody);
 		} catch (JsonProcessingException e) {
 			log.error("JsonProcessingException: " + e.getMessage());
-			throw new ClienteCrearException("Error JsonProcessingException", e.toString());
+			throw new ClienteCrearException(ErrorCoreEnum.JSON_MAPPER_SERIALIZE_ERROR.toString(), "dto: " + requestDto.toString() + " Error: " + e.toString());
 		}
 		HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 
@@ -77,18 +79,22 @@ public class CrearClienteAdapterOut implements CrearClientePortOut {
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
 		    log.error("Resource not found: " + buildUrl() + " - ERROR: " + e.getMessage());		    
-		    throw new ClienteCrearException(HttpStatus.NOT_FOUND.toString(), "Resource not found: " + buildUrl() );
+		    throw new ClienteCrearException(ErrorCoreEnum.HTTP_NOT_FOUND.toString(), "Resource not found: " + buildUrl() );
+		} catch (HttpClientErrorException.Unauthorized e) {
+			// Handle 401 specifically
+			log.error("Unauthorized: " + e.getMessage());
+			throw new ClienteCrearException(ErrorCoreEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "login no autorizado");			
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
 			log.error("HTTP Error: " + e.getStatusCode());
-			throw new ClienteCrearException("4xx / 5xx", "HTTP Error: " + e.getMessage() );
+			throw new ClienteCrearException(ErrorCoreEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + buildUrl() + " RequestBody: " + request + " ResponseBody: " +  response + " Error Msg: " + e.getMessage() );
 		} catch (Exception e) {
 			log.error("Exception: " + e.getMessage());
-			throw new ClienteCrearException("Error al generar un Cliente", e.toString());
+			throw new ClienteCrearException(ErrorCoreEnum.UNEXPECTED_ERROR.toString(), "Error Msg: " + e.toString());
 		}
 		
 		if ( !response.getStatusCode().is2xxSuccessful() ) {
-		    throw new ClienteCrearException(response.getStatusCode().toString(), "Error al generar el Cliente");
+		    throw new ClienteCrearException(ErrorCoreEnum.HTTP_ERROR.toString(), "HTTP Error: " + response.getStatusCode().toString() + " Error Msg: " + response.getBody());
 		}
 
 		//Casteo a Dominio
@@ -98,10 +104,10 @@ public class CrearClienteAdapterOut implements CrearClientePortOut {
 			dto = jsonMapper.readValue(response.getBody(), EndUserDto.class); 				
 		} catch (JsonMappingException e) {
 			log.error("JsonMappingException: " + e.getMessage());
-			throw new ClienteCrearException("Error JsonMappingException", e.toString());
+			throw new ClienteCrearException(ErrorCoreEnum.JSON_MAPPER_DESERIALIZE_ERROR.toString(), "Error JsonMappingException - Response.body: " + response.getBody() + " - Error: " + e.toString());
 		} catch (JsonProcessingException e) {
 			log.error("JsonProcessingException: " + e.getMessage());
-			throw new ClienteCrearException("Error JsonProcessingException", e.toString());
+			throw new ClienteCrearException(ErrorCoreEnum.JSON_MAPPER_DESERIALIZE_ERROR.toString(), "Error JsonProcessingException - Response.body: " + response.getBody() + " - Error: " + e.toString());
 		}
 		
 		return dto;				

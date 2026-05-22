@@ -17,7 +17,9 @@ import com.davalores.crypto.provider.app.ripio.port.out.CotizarRipioPortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteCreateDto;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteDto;
+import com.davalores.crypto.provider.infra.exception.ClienteCrearException;
 import com.davalores.crypto.provider.infra.exception.CotizacionException;
+import com.davalores.crypto.provider.infra.exception.ErrorCoreEnum;
 import com.davalores.crypto.provider.infra.exception.OperacionException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -29,9 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 
-	private String protocolo; 
-	private String dominio; 
-	private String apiPath; 	
+	private final String protocolo; 
+	private final String dominio; 
+	private final String apiPath; 	
 	
 	public CotizarRipioAdapterOut(@Value("${cripto-provider.ripio.protocolo}") String protocolo, 
 			@Value("${cripto-provider.ripio.dominio}") String dominio, 
@@ -62,8 +64,8 @@ public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 			requestBody = objectMapper.writeValueAsString(requestDto);	
 			log.debug("requestBody: " + requestBody);
         } catch (JsonProcessingException e) {
-        	log.error("JsonProcessingException: " + e.getMessage());
-        	throw new CotizacionException("Error JsonProcessingException", e.toString());
+        	log.error("JsonProcessingException: " + e.getMessage());        	
+			throw new CotizacionException(ErrorCoreEnum.JSON_MAPPER_SERIALIZE_ERROR.toString(), "dto: " + requestDto.toString() + " Error: " + e.toString());
         }
 		HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 		
@@ -79,18 +81,22 @@ public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
 		    log.error("Resource not found: " + e.getMessage());		    
-		    throw new CotizacionException(HttpStatus.NOT_FOUND.toString(), "CotizarRipioAdapterOut() - Resource not found: " + e.getMessage() );
+		    throw new CotizacionException(ErrorCoreEnum.HTTP_NOT_FOUND.toString(), "Resource not found: " + buildUrl() );
+		} catch (HttpClientErrorException.Unauthorized e) {
+			// Handle 401 specifically
+			log.error("Unauthorized: " + e.getMessage());
+			throw new CotizacionException(ErrorCoreEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "login no autorizado");			
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
-			log.error("HTTP Error: " + e.getStatusCode());
-			throw new CotizacionException("4xx / 5xx", "CotizarRipioAdapterOut() - HTTP Error: " + e.getMessage() );
+			log.error("HTTP Error: " + e.getStatusCode());			
+			throw new CotizacionException(ErrorCoreEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + buildUrl() + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
 		} catch (Exception e) {
 			log.error("ERROR-INESPERADO: " + e.toString());
-			throw new CotizacionException("ERROR-INESPERADO", "CotizarRipioAdapterOut() - Error en restTemplate: " + e.toString());
+			throw new CotizacionException(ErrorCoreEnum.UNEXPECTED_ERROR.toString(), "Error Msg: " + e.toString());
 		}
 		
 		if ( !response.getStatusCode().is2xxSuccessful() ) {
-		    throw new CotizacionException(response.getStatusCode().toString(), "Error al generar una Cotizacion - response: " + response.toString() );
+		    throw new CotizacionException(ErrorCoreEnum.HTTP_ERROR.toString(), "HTTP Error: " + response.getStatusCode().toString() + " Error Msg: " + response.getBody());
 		}
 
 		
@@ -102,10 +108,10 @@ public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 			dto = jsonMapper.readValue(response.getBody(), QuoteDto.class); 											
 		} catch (JsonMappingException e) {
 			log.error("JsonMappingException: " + e.getMessage());
-			throw new CotizacionException("Error JsonMappingException", e.toString());
+			throw new CotizacionException(ErrorCoreEnum.JSON_MAPPER_DESERIALIZE_ERROR.toString(), "Error JsonMappingException - Response.body: " + response.getBody() + " - Error: " + e.toString());
 		} catch (JsonProcessingException e) {
 			log.error("JsonProcessingException: " + e.getMessage());
-			throw new CotizacionException("Error JsonProcessingException", e.toString());
+			throw new CotizacionException(ErrorCoreEnum.JSON_MAPPER_DESERIALIZE_ERROR.toString(), "Error JsonProcessingException - Response.body: " + response.getBody() + " - Error: " + e.toString());
 		}
 		
 		return dto;

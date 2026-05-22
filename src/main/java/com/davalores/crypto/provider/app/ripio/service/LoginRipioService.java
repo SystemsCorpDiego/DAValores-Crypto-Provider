@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import com.davalores.crypto.provider.app.ripio.port.out.LoginRipioPortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class LoginRipioService {
 	
@@ -17,16 +20,17 @@ public class LoginRipioService {
 	
 	public LoginRipioService(LoginRipioPortOut obtenerToken) {
 		super();
-		this.loginTokenCache = null;
+		this.loginTokenCache = new LoginTokenRipio();
 		this.obtenerToken = obtenerToken;
 	}
 
 
 	public LoginTokenRipio run() {
-		
+		log.debug("run -> ");
 		if ( !isTokenVigente() ) {
 			loginTokenCache = obtenerToken.run();
 		} 
+		log.debug("returnParam -> loginTokenCache: {}", loginTokenCache);
 		return loginTokenCache;		
 	}
 	

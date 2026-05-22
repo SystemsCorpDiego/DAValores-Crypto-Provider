@@ -1,0 +1,22 @@
+package com.davalores.crypto.provider.infra.exception;
+
+public enum ErrorCoreEnum {
+
+	HTTP_UNAUTHORIZED_ERROR("HTTP_UNAUTHORIZED_ERROR"),
+	HTTP_NOT_FOUND("HTTP_ERROR_404"),
+	HTTP_ERROR("HTTP_ERROR"),
+	JSON_MAPPER_SERIALIZE_ERROR("JSON_MAPPER_SERIALIZE_ERROR"),
+	JSON_MAPPER_DESERIALIZE_ERROR("JSON_MAPPER_DESERIALIZE_ERROR"),
+	JSON_PROC_ERROR("JSON_PROC_ERROR"), 
+	UNEXPECTED_ERROR("UNEXPECTED_ERROR");
+	
+	private String type;
+	 
+	ErrorCoreEnum(String type) {
+        this.type = type;
+    }
+ 
+    public String getType() {
+        return type;
+    }
+}

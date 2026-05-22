@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 public class LoginTokenRipio {
 	
 	private String token;
-	private LocalDateTime vto;
+	private LocalDateTime vto = null;
+	
 	
 	public String getToken() {
 		return token;
@@ -18,6 +19,11 @@ public class LoginTokenRipio {
 	}
 	public void setVto(LocalDateTime vto) {
 		this.vto = vto;
+	}
+	
+	@Override
+	public String toString() {
+		return "LoginTokenRipio [token=" + token + ", vto=" + vto + "]";
 	}
 	
 	

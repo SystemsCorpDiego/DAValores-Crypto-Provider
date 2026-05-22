@@ -7,6 +7,9 @@ import com.davalores.crypto.provider.app.ripio.port.out.CotizarRipioPortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteDto;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class CotizarRipioService implements CotizarRipioPortIn {
 
@@ -22,10 +25,11 @@ public class CotizarRipioService implements CotizarRipioPortIn {
 
 	@Override
     public QuoteDto run(String par) {
-        
+        log.debug("input -> par: {}", par);
         LoginTokenRipio loginToken = loginRipioService.run();
         QuoteDto cotizacion = cotizacionObtener.run(loginToken, par);
 
+        log.debug("output -> cotizacion: {}", cotizacion);
         return cotizacion;
 	}
 }

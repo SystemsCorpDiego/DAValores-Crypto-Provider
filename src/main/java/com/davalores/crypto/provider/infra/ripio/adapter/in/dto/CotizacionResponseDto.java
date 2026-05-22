@@ -74,4 +74,13 @@ public class CotizacionResponseDto {
 		this.expira = expira;
 	}
 	
+	@Override
+	public String toString() {
+		return "CotizacionResponseDto [idExterno=" + idExterno + ", idExternoProveedor=" + idExternoProveedor
+				+ ", activoBase=" + activoBase + ", activoCoti=" + activoCoti + ", compraRatio=" + compraRatio
+				+ ", compraComision=" + compraComision + ", ventaRatio=" + ventaRatio + ", ventaComision="
+				+ ventaComision + ", expira=" + expira + "]";
+	}
+	
+	
 }

@@ -8,6 +8,10 @@ public class ErrorResponseDto {
 	private String type; // "SellTransactionMinLimitExceeded",
 	private ErrorDetail detail;
 	private Long status; // 400
+	
+	public String getMessage() {
+        return detail.getMessage();
+    }
 }
 
 @Data

@@ -7,6 +7,9 @@ import com.davalores.crypto.provider.app.ripio.port.out.CrearClientePortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.EndUserDto;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class CrearClienteRipioService implements CrearClienteRipioPortIn {
 
@@ -21,11 +24,12 @@ public class CrearClienteRipioService implements CrearClienteRipioPortIn {
 	
 	@Override
 	public EndUserDto run() {
-
+		log.debug("run -> ");
 		LoginTokenRipio loginToken = loginRipioService.run();
 		
 		EndUserDto response = portOut.run(loginToken);
 		
+		log.debug("returnParam: EndUserDto {}", response);
 		return response;
 		
 	}
