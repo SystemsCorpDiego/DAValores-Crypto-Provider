@@ -79,7 +79,7 @@ public class CrearClienteAdapterOut implements CrearClientePortOut {
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
 		    log.error("Resource not found: " + buildUrl() + " - ERROR: " + e.getMessage());		    
-		    throw new ClienteCrearException(ErrorCoreEnum.HTTP_NOT_FOUND.toString(), "Resource not found: " + buildUrl() );
+		    throw new ClienteCrearException(ErrorCoreEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + buildUrl() );
 		} catch (HttpClientErrorException.Unauthorized e) {
 			// Handle 401 specifically
 			log.error("Unauthorized: " + e.getMessage());

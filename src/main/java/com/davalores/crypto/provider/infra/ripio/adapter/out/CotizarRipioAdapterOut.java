@@ -81,7 +81,7 @@ public class CotizarRipioAdapterOut implements CotizarRipioPortOut {
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
 		    log.error("Resource not found: " + e.getMessage());		    
-		    throw new CotizacionException(ErrorCoreEnum.HTTP_NOT_FOUND.toString(), "Resource not found: " + buildUrl() );
+		    throw new CotizacionException(ErrorCoreEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + buildUrl() );
 		} catch (HttpClientErrorException.Unauthorized e) {
 			// Handle 401 specifically
 			log.error("Unauthorized: " + e.getMessage());
