@@ -32,6 +32,10 @@ public class MappersTest {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
 		System.out.println( "test-localZdt.format: -> " +localZdt.format(formatter) );
 		
+		ZonedDateTime zdt2 = ZonedDateTime.now();
+		DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		System.out.println( "test-zdt2.format: -> " +zdt2.format(formatter2) );
+
 		
 	}
 }
