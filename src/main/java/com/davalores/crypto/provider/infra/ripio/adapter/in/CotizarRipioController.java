@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.provider.app.port.in.CotizarRipioPortIn;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteDto;
+import com.davalores.crypto.provider.infra.exception.CotizacionException;
+import com.davalores.crypto.provider.infra.exception.ErrorTypeEnum;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.CotizacionResponseDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.CotizarRipioRequestDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.mapper.QuoteMapper;
@@ -34,6 +36,11 @@ public class CotizarRipioController {
 		String par = request.getActivoBase() + "_" + request.getActivoCoti();		
 		
 		QuoteDto dto = portIn.run(par);
+		
+		if ( dto.getExpires_at() == null || !dto.getExpires_at().endsWith("Z")  ) {
+			throw new CotizacionException(ErrorTypeEnum.CAST_ERROR.toString(), "Formato fecha incorrecto para el atributo 'expires_at' ( "+dto.getExpires_at()+" )");
+		}
+		
 		CotizacionResponseDto response = mapper.run(dto);
 		
 		log.debug("response: {}", response);

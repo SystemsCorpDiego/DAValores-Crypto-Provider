@@ -18,8 +18,6 @@ public class MappersTest {
 		//LocalDateTime.parse( "" );
 		System.out.println("test-LocalDate.now(): -> " + LocalDateTime.now());
 		
-		 
-		
 		Instant ins = Instant.parse( aux );
 		System.out.println("test-ins: -> " + ins);
 		
@@ -35,7 +33,6 @@ public class MappersTest {
 		ZonedDateTime zdt2 = ZonedDateTime.now();
 		DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		System.out.println( "test-zdt2.format: -> " +zdt2.format(formatter2) );
-
 		
 	}
 }
