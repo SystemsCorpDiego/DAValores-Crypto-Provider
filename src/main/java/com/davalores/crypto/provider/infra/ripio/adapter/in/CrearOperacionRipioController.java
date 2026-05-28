@@ -13,9 +13,6 @@ import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.OperacionRespons
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.OperacionRipioRequestDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.mapper.OperacionMapper;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestController
 @RequestMapping("/ripio/operacion")
 public class CrearOperacionRipioController {
@@ -30,8 +27,6 @@ public class CrearOperacionRipioController {
 
 	@PostMapping("/COMPRA/")
 	public OperacionResponseDto runCompra(@RequestBody OperacionRipioRequestDto dto) {
-		log.debug("runCompra -> dto: {}", dto);
-		
 		dto.setTipo(OperacionTipoEnum.COMPRA.getCodigoRipio());		
 		
 		QuoteExecutionDto quoteExecution = mapper.run(dto);
@@ -39,15 +34,11 @@ public class CrearOperacionRipioController {
 		OperationDto operationDto = portIn.run(dto.getIdExternoProveedorCotizacion(), quoteExecution);
 		OperacionResponseDto operacion = mapper.run(operationDto);
 		operacion.setTipo(OperacionTipoEnum.COMPRA.getCodigo());
-		
-		log.debug("runCompra -> operacion: {}", operacion);
 		return operacion;
     }
 
 	@PostMapping("/VENTA/")
 	public OperacionResponseDto runVenta(@RequestBody OperacionRipioRequestDto dto) {
-		log.debug("runVenta -> dto: {}", dto);
-		
 		dto.setTipo(OperacionTipoEnum.VENTA.getCodigoRipio());		
 		
 		QuoteExecutionDto quoteExecution = mapper.run(dto); 		
@@ -56,7 +47,6 @@ public class CrearOperacionRipioController {
 		OperacionResponseDto operacion = mapper.run(operationDto);
 		operacion.setTipo(OperacionTipoEnum.VENTA.getCodigo());
 		
-		log.debug("runVenta -> operacion: {}", operacion);
 		return operacion;
     }
 
