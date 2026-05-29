@@ -8,7 +8,7 @@ import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteExecutionD
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.OperacionResponseDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.OperacionRipioRequestDto;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface OperacionMapper {
 
 	@Mapping(target="op_type", source="tipo")

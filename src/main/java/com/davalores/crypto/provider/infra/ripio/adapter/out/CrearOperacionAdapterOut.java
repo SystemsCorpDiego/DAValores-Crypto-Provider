@@ -1,5 +1,6 @@
 package com.davalores.crypto.provider.infra.ripio.adapter.out;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +17,9 @@ import com.davalores.crypto.provider.app.ripio.port.out.CrearOperacionPortOut;
 import com.davalores.crypto.provider.domain.model.LoginTokenRipio;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.ErrorResponseDto;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.OperationDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteExecutionBaseAmountDto;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteExecutionDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteExecutionQuoteAmountDto;
 import com.davalores.crypto.provider.infra.exception.ErrorCoreEnum;
 import com.davalores.crypto.provider.infra.exception.OperacionException;
 import com.davalores.crypto.provider.infra.exception.RipioException;
@@ -31,18 +34,22 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 
+	
 	private final String protocolo; 
 	private final String dominio; 
 	private final String apiPath; 
+	private final QuoteExecutioBQAmountMapper mapper;
 
 	public CrearOperacionAdapterOut(@Value("${cripto-provider.ripio.protocolo}") String protocolo, 
 			@Value("${cripto-provider.ripio.dominio}") String dominio, 
-			@Value("${cripto-provider.ripio.apis.operacionCrear}") String apiPath
+			@Value("${cripto-provider.ripio.apis.operacionCrear}") String apiPath,
+			QuoteExecutioBQAmountMapper mapper
 			) {
 		super();
 		this.protocolo = protocolo;
 		this.dominio = dominio;
 		this.apiPath = apiPath;
+		this.mapper = mapper;
 	}
 	
 	
@@ -56,10 +63,20 @@ public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 		//Seteo de Body
 		UUID externalRef = UUID.randomUUID();
 		transaccion.setExternal_ref(externalRef.toString());
+		
+		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String requestBody = null;
 		try {
-			requestBody = objectMapper.writeValueAsString(transaccion);		
+			QuoteExecutionQuoteAmountDto quoteExecQA = null;
+			QuoteExecutionBaseAmountDto quoteExecBA = null;
+			if ( transaccion.getBase_amount() == null || transaccion.getBase_amount().equals(BigDecimal.ZERO) ) {
+				quoteExecQA = mapper.runQA(transaccion);
+				requestBody = objectMapper.writeValueAsString(quoteExecQA);		
+			} else {
+				quoteExecBA = mapper.runBA(transaccion);
+				requestBody = objectMapper.writeValueAsString(quoteExecBA);
+			}
 			log.debug("requestBody: " + requestBody);
         } catch (JsonProcessingException e) {	
         	log.error("JsonProcessingException: " + e.getMessage());	        	
@@ -84,7 +101,7 @@ public class CrearOperacionAdapterOut implements CrearOperacionPortOut {
 			log.error("Unauthorized: " + e.getMessage());
 			throw new OperacionException(ErrorCoreEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "login no autorizado");			
 		} catch (HttpClientErrorException.BadRequest | HttpClientErrorException.Forbidden e ) {
-			// Handle 400 specifically
+			// Handle BadRequest(400) |  Forbidden(403)
 			log.error("BadRequest|Forbidden: " + e.getMessage());
 			log.error("BadRequest|Forbidden: " + e.getStatusCode().value() );
 			ErrorResponseDto errorDto = null;

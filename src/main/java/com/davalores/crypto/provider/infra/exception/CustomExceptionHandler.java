@@ -21,7 +21,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error("TicketRuntimeException - INIT");		
 		log.error("TicketRuntimeException - " + ex.toString());	
 		
-		HttpStatus status = HttpStatus.PRECONDITION_FAILED;
+		//HttpStatus status = HttpStatus.PRECONDITION_FAILED; //HTTP-412
+		HttpStatus status = HttpStatus.FORBIDDEN; //HTTP-403 Applicable when business rules specifically refuse a request
 		String detalle;
 		if (ex.getDescripcion() != null && !ex.getDescripcion().isEmpty()) {
 			detalle = ex.getDescripcion();

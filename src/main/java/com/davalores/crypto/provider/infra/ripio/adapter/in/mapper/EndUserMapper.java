@@ -7,7 +7,7 @@ import com.davalores.crypto.provider.domain.model.ripio.caas.api.EndUserCreateDt
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.EndUserDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.ClienteResponseDto;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface EndUserMapper {
 
 	@Mapping(target = "idExterno", source = "external_ref")	

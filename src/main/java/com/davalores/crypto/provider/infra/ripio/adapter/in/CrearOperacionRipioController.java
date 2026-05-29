@@ -1,5 +1,7 @@
 package com.davalores.crypto.provider.infra.ripio.adapter.in;
 
+import java.math.BigDecimal;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +11,7 @@ import com.davalores.crypto.provider.app.port.in.CrearOperacionRipioPortInt;
 import com.davalores.crypto.provider.domain.model.OperacionTipoEnum;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.OperationDto;
 import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteExecutionDto;
+import com.davalores.crypto.provider.domain.model.ripio.caas.api.QuoteExecutionQuoteAmountDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.OperacionResponseDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.dto.OperacionRipioRequestDto;
 import com.davalores.crypto.provider.infra.ripio.adapter.in.mapper.OperacionMapper;
@@ -30,7 +33,7 @@ public class CrearOperacionRipioController {
 		dto.setTipo(OperacionTipoEnum.COMPRA.getCodigoRipio());		
 		
 		QuoteExecutionDto quoteExecution = mapper.run(dto);
-		quoteExecution.setBase_amount(0L);
+		quoteExecution.setBase_amount(BigDecimal.ZERO);
 		OperationDto operationDto = portIn.run(dto.getIdExternoProveedorCotizacion(), quoteExecution);
 		OperacionResponseDto operacion = mapper.run(operationDto);
 		operacion.setTipo(OperacionTipoEnum.COMPRA.getCodigo());
@@ -42,7 +45,7 @@ public class CrearOperacionRipioController {
 		dto.setTipo(OperacionTipoEnum.VENTA.getCodigoRipio());		
 		
 		QuoteExecutionDto quoteExecution = mapper.run(dto); 		
-		quoteExecution.setBase_amount(0L);
+		quoteExecution.setBase_amount(BigDecimal.ZERO);
 		OperationDto operationDto = portIn.run(dto.getIdExternoProveedorCotizacion(), quoteExecution);
 		OperacionResponseDto operacion = mapper.run(operationDto);
 		operacion.setTipo(OperacionTipoEnum.VENTA.getCodigo());
