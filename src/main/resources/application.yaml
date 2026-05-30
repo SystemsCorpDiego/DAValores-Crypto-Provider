@@ -19,6 +19,7 @@ cripto-provider:
          cotizar: ${CRYPTO_PATH_COTIZAR:/api/v1/reusable-quotes/}
          clienteCrear: ${CRYPTO_PATH_CLIENTECREAR:/api/v1/end-users/}
          operacionCrear: ${CRYPTO_PATH_OPERACIONCREAR:/api/v1/reusable-quotes/:reusableQuoteId/actions/execute/}
+         cotizacionConsul: ${CRYPTO_PATH_COTIZAR:/api/v1/reusable-quotes/}
       seguridad:
          clienteId: ${CRYPTO_CLIENT_ID}
          clienteSecreto: ${CRYPTO_CLIENT_SECRET}		 

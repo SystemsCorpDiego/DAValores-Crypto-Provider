@@ -1,8 +1,5 @@
 package com.davalores.crypto.provider.domain.model.ripio.caas.api;
 
-import lombok.Data;
-
-
 public class QuoteDto {
 	private String id; // d1230c26-b1ba-4adc-a1cd-7a3b3a1d34d6
 	private String external_ref; // "op1"
