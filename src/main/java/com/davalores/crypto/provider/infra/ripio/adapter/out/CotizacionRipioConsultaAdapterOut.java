@@ -3,7 +3,7 @@ package com.davalores.crypto.provider.infra.ripio.adapter.out;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -42,21 +42,21 @@ public class CotizacionRipioConsultaAdapterOut implements CotizacionRipioConsult
     public QuoteDto run(LoginTokenRipio loginToken, String id) {
 		//Seteo de Headers
 		HttpHeaders headers = new HttpHeaders();
-		//headers.setContentType(MediaType.APPLICATION_JSON); 
 		headers.setBearerAuth(loginToken.getToken()); // Sets "Authorization: Bearer <token>"
-		
+		HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
 		//Sin Body
-		String requestBody = null;
-		//HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 		
 		
 		//Realizo la llamada a la API de Ripio
 		RestTemplate restTemplate = new RestTemplate();		
 		ResponseEntity<String> response = null;
 		String sUrl = buildUrl(id);
+		
 		try {
 			log.debug("buildUrl(): " + sUrl);
-			response = restTemplate.getForEntity(sUrl, String.class);
+			//response = restTemplate.getForEntity(sUrl, String.class);			
+			response = restTemplate.exchange(sUrl, HttpMethod.GET, requestEntity, String.class);			
 			log.debug("response: " + response.toString());
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
